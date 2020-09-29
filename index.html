@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div class="">
+    <div>
+        <input id="city" type="text" name="city" placeholder="city name">
+        <button onclick="getInputValue()">Submit</button>
+    </div>
+    <div id="response"></div>
+</div>
+<script type="text/javascript">
+    let cityName;
+    let obj;
+
+    function getInputValue(){
+        cityName = document.getElementById("city").value;
+        console.log("cityName: "+cityName);
+        sentRequest();
+    }
+
+    function sentRequest(){
+
+//sukuriame "uzklausa" kintamaji, jam nurodome kad atliksime http request uzklausa
+        var uzklausa = new XMLHttpRequest();
+//formuojame GET uzklausa
+        uzklausa.open("GET", "https://api.openweathermap.org/data/2.5/weather?q="+cityName+"&APPID=6461d047b04d9829a5acde633b779741&units=metric", false);
+        //siunciame uzklausa
+        uzklausa.send();
+        // console.log(uzklausa.responseText);
+        obj = JSON.parse(uzklausa.responseText);
+        console.log(obj.main.temp);
+        //gauname atsakyma, atsakyma spausdiname i div'a
+        document.getElementById("response").innerHTML = cityName+" temperatura : "+obj.main.temp;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+            alert("leidimas duotas");
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+
+
+    }
+
+    function showPosition(position) {
+        alert("Latitude: " + position.coords.latitude +
+            "<br>Longitude: " + position.coords.longitude);
+    }
+</script>
+</body>
+</html>
